@@ -1,0 +1,16 @@
+<launch>
+    <!-- Start a node to communicate with the drone -->
+    <node name="test_node" pkg="imu_test" type="test_node" args="" />
+
+    <!-- Start a node to do raw IMU data fusion-->
+    <node name="imu_filter_node" pkg="imu_filter_madgwick" type="imu_filter_node">
+        <!-- Filter settings -->
+        <param name="publish_tf" value="false" />
+        <param name="use_mag" value="true" />
+        <param name="gain" value="0.05" />
+        <param name="zeta" value="0.0" />
+    </node>
+
+    <!-- Launch rqt_plot for visualization -->
+    <node name="rqt_plot" pkg="rqt_plot" type="rqt_plot" args="/imu/euler/vector/x, /imu/euler/vector/y, /imu/euler/vector/z" />
+</launch>
