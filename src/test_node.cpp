@@ -38,32 +38,45 @@ int main(int argc, char** argv) {
     
     imuSub = nh.subscribe("/imu/data", 10, &onImuMsg);
     
-    ros::Rate r(50);
+    ros::Rate r(250);
     while (ros::ok())
     {
         ros::Time stamp = ros::Time::now();
         
-        //Publish raw imu data
+        //Publish raw imu data (copied from phidgets spatial 3/3/3 imu)
         sensor_msgs::Imu imuMsg;
         imuMsg.header.stamp = stamp;
-        imuMsg.orientation.w = 1.0;
-        imuMsg.orientation.x = 0.0;
-        imuMsg.orientation.y = 0.0;
-        imuMsg.orientation.z = 0.0;
+        imuMsg.header.frame_id = "imu";
+
         imuMsg.angular_velocity.x = 0.0;
         imuMsg.angular_velocity.y = 0.0;
         imuMsg.angular_velocity.z = 0.0;
+
+        imuMsg.angular_velocity_covariance[0] = 1.2184696791468346e-07;
+        imuMsg.angular_velocity_covariance[4] = 1.2184696791468346e-07;
+        imuMsg.angular_velocity_covariance[8] = 1.2184696791468346e-07;
+
+
         imuMsg.linear_acceleration.x = 0.0;
         imuMsg.linear_acceleration.y = 0.0;
         imuMsg.linear_acceleration.z = 9.81;
+
+        imuMsg.linear_acceleration_covariance[0] = 8.66124974095918e-06;
+        imuMsg.linear_acceleration_covariance[4] = 8.66124974095918e-06;
+        imuMsg.linear_acceleration_covariance[8] = 8.66124974095918e-06;
+
         imuPub.publish(imuMsg); 
         
         //Publish magnetometer data
         geometry_msgs::Vector3Stamped magMsg;
         magMsg.header.stamp = stamp;
-        magMsg.vector.x = -0.420;
-        magMsg.vector.y = +0.302;
-        magMsg.vector.z = -0.835;
+        magMsg.header.frame_id = "imu";
+//        magMsg.vector.x = -0.420;
+//        magMsg.vector.y = +0.302;
+//        magMsg.vector.z = -0.835;
+        magMsg.vector.x = 0.04848;
+        magMsg.vector.y = 0.05151;
+        magMsg.vector.z = 0.33936;
         magPub.publish(magMsg);   
     
         ros::spinOnce();
